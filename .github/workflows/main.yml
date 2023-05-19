@@ -1,11 +1,10 @@
 name: Django CI
 
+# This yaml file will execute when creating a pull request to the "Test" Branch.
+# Feature branches should be merged to the test before entering the 
 on:
-  # push:
-  #   branches: [ "dev" ]
   pull_request:
     branches: [ "Test" ]
-
 
 
 #NOTES: 
@@ -15,11 +14,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Any scripts used should be UNIX compatable - (Bash/Shell Scripts)
     strategy:
-      max-parallel: 4
+      max-parallel: 3   # Extend if using more python-versions
       matrix:
-        python-version: [3.8]           
+        python-version: [3.7, 3.8, 3.9]           
     
     steps:
     - uses: actions/checkout@v3
