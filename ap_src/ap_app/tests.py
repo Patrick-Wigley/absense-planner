@@ -20,7 +20,7 @@ from seleniumbase import BaseCase
 # Consts 
 # Activating "DEMO" will tell selenium to simulate the UI actions during testing
 DEMO = True
-
+# Change
 
 class TestSuiteTemplate(LiveServerTestCase, BaseCase):
     """ Testing Suite Class - Implement any tests inside
