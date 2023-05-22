@@ -56,6 +56,7 @@ jobs:
 
   execute-automated-tests:
     - name: Front-end Tests with SeleniumBase
-      run: |
-        echo Running Application Tests With SeleniumBase
-        pytest --cov=ap_app ap_src/ap_app --headless --disable-warnings
+      steps:
+        run: |
+          echo Running Application Tests With SeleniumBase
+          pytest --cov=ap_app ap_src/ap_app --headless --disable-warnings
