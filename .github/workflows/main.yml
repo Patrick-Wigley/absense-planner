@@ -20,8 +20,7 @@ on:
 jobs:
   build:
     pool: MainEnv
-      vmImage:
-        ubuntu-latest
+      runs-on: ubuntu-latest
     strategy:
       max-parallel: 2   # Extend if using more python-versions
       matrix:
