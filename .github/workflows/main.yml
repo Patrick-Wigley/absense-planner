@@ -55,8 +55,8 @@ jobs:
         pip3 install pytest-cov
 
   execute-automated-tests:
-    - name: Front-end Tests with SeleniumBase
       steps:
+      - name: Front-end Tests with SeleniumBase
         run: |
           echo Running Application Tests With SeleniumBase
           pytest --cov=ap_app ap_src/ap_app --headless --disable-warnings
