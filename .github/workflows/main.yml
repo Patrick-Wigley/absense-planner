@@ -10,60 +10,112 @@ on:
 #NOTES: 
 # - For consistency, using PIP in virtual unbuntu environment instead of anaconda
 # - 
-    
 
-jobs:
-  build:
-    runs-on: ubuntu-latest  # Any scripts used should be UNIX compatable - (Bash/Shell Scripts)
+
+stages:
+  pool:
+    vmImage: ubuntu-latest
     strategy:
-      max-parallel: 2   # Extend if using more python-versions
-      matrix:
-        python-version: [3.8, 3.9]           
-    
-    steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }} 
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Application Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip3 install -r requirements.txt
-        echo "Collecting SeleniumBase & ChromeDriver"
-        python -m pip install seleniumbase
-        sbase get chromedriver latest
-    - name: Set up Django Environment
-      run: |
-        echo "Making Migrations"
-        python3 ap_src/manage.py makemigrations
-        echo "Running Migrations"
-        python3 ap_src/manage.py migrate ap_app
-        python3 ap_src/manage.py migrate
+     max-parallel: 2   # Extend if using more python-versions
+     matrix:
+      python-version: [3.8, 3.9] 
 
-        echo "Loading Fixtures"
-        for FILE in ap_src/ap_app/fixtures/*; 
-        do python3 ap_src/manage.py loaddata $FILE; done
+  - stage: build
+    jobs:
+    - job: build
+      steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }} 
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Application Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+          echo "Collecting SeleniumBase & ChromeDriver"
+          python -m pip install seleniumbase
+          sbase get chromedriver latest
+      - name: Set up Django Environment
+        run: |
+          echo "Making Migrations"
+          python3 ap_src/manage.py makemigrations
+          echo "Running Migrations"
+          python3 ap_src/manage.py migrate ap_app
+          python3 ap_src/manage.py migrate
+
+          echo "Loading Fixtures"
+          for FILE in ap_src/ap_app/fixtures/*; 
+          do python3 ap_src/manage.py loaddata $FILE; done
+          
+          echo "Collecting Static Files"
+          python3 ap_src/manage.py collectstatic --noinput
+    
+
+      - name: Install Testing Dependencies
+        run: |
+          pip3 install pytest-django
+          pip3 install pytest-cov
+
+    - job: test
+      steps:
+      - name: Front-end Tests with SeleniumBase
+        run: |
+          echo Running Application Tests With SeleniumBase
+          pytest --cov=ap_app ap_src/ap_app --headless --disable-warnings
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest  # Any scripts used should be UNIX compatable - (Bash/Shell Scripts)
+#     strategy:
+#       max-parallel: 2   # Extend if using more python-versions
+#       matrix:
+#         python-version: [3.8, 3.9]           
+    
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - name: Set up Python ${{ matrix.python-version }} 
+  #     uses: actions/setup-python@v3
+  #     with:
+  #       python-version: ${{ matrix.python-version }}
+  #   - name: Install Application Dependencies
+  #     run: |
+  #       python -m pip install --upgrade pip
+  #       pip3 install -r requirements.txt
+  #       echo "Collecting SeleniumBase & ChromeDriver"
+  #       python -m pip install seleniumbase
+  #       sbase get chromedriver latest
+  #   - name: Set up Django Environment
+  #     run: |
+  #       echo "Making Migrations"
+  #       python3 ap_src/manage.py makemigrations
+  #       echo "Running Migrations"
+  #       python3 ap_src/manage.py migrate ap_app
+  #       python3 ap_src/manage.py migrate
+
+  #       echo "Loading Fixtures"
+  #       for FILE in ap_src/ap_app/fixtures/*; 
+  #       do python3 ap_src/manage.py loaddata $FILE; done
         
-        echo "Collecting Static Files"
-        python3 ap_src/manage.py collectstatic --noinput
+  #       echo "Collecting Static Files"
+  #       python3 ap_src/manage.py collectstatic --noinput
   
 
-    - name: Install Testing Dependencies
-      run: |
-        pip3 install pytest-django
-        pip3 install pytest-cov
+  #   - name: Install Testing Dependencies
+  #     run: |
+  #       pip3 install pytest-django
+  #       pip3 install pytest-cov
 
-  execute-automated-tests:
-    dependsOn: build
-    runs-on: ubuntu-latest  # Any scripts used should be UNIX compatable - (Bash/Shell Scripts)
-    strategy:
-      max-parallel: 2   # Extend if using more python-versions
-      matrix:
-        python-version: [3.8, 3.9]  
+  # execute-automated-tests:
+  #   dependsOn: build
+  #   runs-on: ubuntu-latest  # Any scripts used should be UNIX compatable - (Bash/Shell Scripts)
+  #   strategy:
+  #     max-parallel: 2   # Extend if using more python-versions
+  #     matrix:
+  #       python-version: [3.8, 3.9]  
 
-    steps:
-    - name: Front-end Tests with SeleniumBase
-      run: |
-        echo Running Application Tests With SeleniumBase
-        pytest --cov=ap_app ap_src/ap_app --headless --disable-warnings
+  #   steps:
+  #   - name: Front-end Tests with SeleniumBase
+  #     run: |
+  #       echo Running Application Tests With SeleniumBase
+  #       pytest --cov=ap_app ap_src/ap_app --headless --disable-warnings
