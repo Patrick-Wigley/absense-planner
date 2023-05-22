@@ -16,9 +16,9 @@ jobs:
   build:
     runs-on: ubuntu-latest  # Any scripts used should be UNIX compatable - (Bash/Shell Scripts)
     strategy:
-      max-parallel: 3   # Extend if using more python-versions
+      max-parallel: 2   # Extend if using more python-versions
       matrix:
-        python-version: [3.7, 3.8, 3.9]           
+        python-version: [3.8, 3.9]           
     
     steps:
     - uses: actions/checkout@v3
@@ -54,7 +54,8 @@ jobs:
         pip3 install pytest-django
         pip3 install pytest-cov
 
-    - name: Run Tests
+  execute-automated-tests:
+    - name: Front-end Tests with SeleniumBase
       run: |
         echo Running Application Tests With SeleniumBase
         pytest --cov=ap_app ap_src/ap_app --headless --disable-warnings
