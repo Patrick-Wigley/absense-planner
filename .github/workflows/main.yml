@@ -55,12 +55,13 @@ jobs:
         pip3 install pytest-cov
 
   execute-automated-tests:
+    dependsOn: build
     runs-on: ubuntu-latest  # Any scripts used should be UNIX compatable - (Bash/Shell Scripts)
     strategy:
       max-parallel: 2   # Extend if using more python-versions
       matrix:
         python-version: [3.8, 3.9]  
-        
+
     steps:
     - name: Front-end Tests with SeleniumBase
       run: |
