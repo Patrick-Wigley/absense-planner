@@ -22,7 +22,7 @@ jobs:
     strategy:
       max-parallel: 2   # Extend if using more python-versions
       matrix:
-        python-version: [3.8, 3.9]   
+        python-version: [3.8]   
           
     runs-on: ubuntu-latest
     steps:
