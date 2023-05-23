@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./mainEnv
+        working-directory: mainEnv
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }} 
