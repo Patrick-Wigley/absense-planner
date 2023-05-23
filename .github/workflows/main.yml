@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: static-site
-        path: /mainEnv/
+        path: /mainEnv/static-site
 
   test:
     name: Test Application
