@@ -1,3 +1,10 @@
+## USING Absence-Planner PR Check with automated testing pipeline
+When creating a Pull-Request, the tests setup inside 'ap_src/ap_app/tests.py' will be ran automatically.
+Please consider results of automated tests as merging when failures are present can result in damaging the absence-planner on the main production branch.
+
+
+---
+
 <p>
     <img alt="Rolls-Royce Logo" width="100" src="https://raw.githubusercontent.com/rropen/.github/main/img/logo.png">
     <br>
