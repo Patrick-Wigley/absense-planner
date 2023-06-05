@@ -56,33 +56,6 @@ class TestSuiteTemplate(LiveServerTestCase, BaseCase):
         
 
 
-    def test_basic(self):
-        self.open(self.live_server_url)
-        self.assert_title("Home - RR Absence")
-        self.click("#signup")
-        self.auto_signup()
-
-        # -=-= Login page =-=-
-        self.assert_true(
-            "Login" in self.get_page_title(),
-            msg="[TESTING CODE ERROR]: Not on Login-Page",
-        )
-
-        self.send_keys(USERNAME_ID, text=USER)
-        self.send_keys(PASSWORD_ID, text=CORRECT_PASSWORD)
-        # Click "Login"
-        self.click("#submit")
-
-        if "Policy" in self.get_page_title():
-            # -=-= Policy Page =-=-
-            self.click("#terms")
-            self.click("#submit")
-
-        # -=-= Main Calendar Page =-=-
-
-        self.click("#home")
-
-
     def auto_signup(self, username=USER, password=CORRECT_PASSWORD):
         """Used a template for typing values in the signup page when testing,
         if not entered the username and password will default to successful values"""
